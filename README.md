@@ -1,6 +1,8 @@
-# 🧪 calculadora-resina-3d-mophinho
+# 🧪 Calculadora Impressora 3D
 
 > Calculadora web para precificação de peças impressas em resina 3D — desenvolvida com HTML, CSS e JavaScript puro.
+
+🌐 **Acesse o projeto ao vivo:** [marcus-calegar.github.io/calculadora-impressao-3d](https://marcus-calegar.github.io/calculadora-impressao-3d/)
 
 ---
 
@@ -45,12 +47,12 @@ Sem frameworks. Sem bundlers. 100% estático — **pronto para deploy no Vercel,
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/seu-usuario/calculadora-resina-3d-mophinho.git
+   git clone https://github.com/Marcus-Calegar/calculadora-impressao-3d.git
    ```
 
 2. Abra o arquivo `index.html` diretamente no navegador — não requer servidor ou instalação.
 
-3. Ou acesse a versão publicada em: `https://seu-usuario.github.io/calculadora-resina-3d-mophinho`
+3. Ou acesse direto pelo link: [marcus-calegar.github.io/calculadora-impressao-3d](https://marcus-calegar.github.io/calculadora-impressao-3d/)
 
 ---
 
@@ -72,6 +74,8 @@ preço_final     = custo_total × (1 + margem_lucro / 100)
 
 > **Este projeto foi inteiramente desenvolvido com o auxílio de IA generativa.**
 
+O modelo utilizado foi o **Claude Sonnet** (Anthropic), acessado através da plataforma **Antigravity** (Google DeepMind) — um assistente de programação em par que executa ações diretamente no ambiente de desenvolvimento.
+
 O objetivo principal **não foi apenas criar a calculadora**, mas sim explorar e aprimorar a habilidade de:
 
 - ✍️ **Escrever prompts eficazes** — descrever requisitos de forma clara, estruturada e completa
@@ -88,7 +92,7 @@ Este projeto faz parte de uma jornada de aprendizado sobre **engenharia de promp
 ## 📁 Estrutura
 
 ```
-calculadora-resina-3d-mophinho/
+calculadora-impressao-3d/
 ├── index.html   # Estrutura HTML semântica completa
 ├── style.css    # Design system com dark/light mode
 ├── script.js    # Toda a lógica da aplicação
@@ -104,5 +108,5 @@ MIT — sinta-se livre para usar, modificar e distribuir.
 ---
 
 <p align="center">
-  Feito com 💜 e muita curiosidade · <strong>Mophinho</strong>
+  Feito com 💜 e muita curiosidade · <strong>Calculadora Impressora 3D</strong>
 </p>
