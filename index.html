@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Calculadora de custo para impressão 3D em resina — calcule preço de venda, margens e custos com precisão." />
+  <title>Calculadora 3D Resina — Mophinho</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+            <line x1="12" y1="22.08" x2="12" y2="12" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-name">Calculadora impressora 3D</h1>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme" class="icon-btn" title="Alternar tema" aria-label="Alternar tema claro/escuro">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+        <button id="btn-history-open" class="nav-btn nav-btn--history" title="Histórico de cálculos" aria-label="Abrir histórico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3.05 11a9 9 0 1 0 .5-3.5" />
+            <polyline points="3 3 3 11 11 11" />
+            <polyline points="12 8 12 12 14 14" />
+          </svg>
+          <span>Histórico</span>
+        </button>
+        <button id="btn-preset-open" class="nav-btn nav-btn--preset" title="Gerenciar presets salvos" aria-label="Gerenciar presets">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <span>Presets</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN ===== -->
+  <main class="app-main">
+    <div class="dashboard-grid">
+
+      <!-- ===== INPUTS COLUMN ===== -->
+      <div class="inputs-column">
+
+        <!-- CARD 1: Custos da Impressora -->
+        <div class="card" id="card-printer">
+          <div class="card-header">
+            <div class="card-icon printer-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9" />
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                <rect x="6" y="14" width="12" height="8" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="card-title">Custos da Impressora</h2>
+              <p class="card-subtitle">Valores por hora de operação</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="field-group">
+              <label class="field-label" for="depreciation">Depreciação da máquina</label>
+              <div class="input-wrapper">
+                <span class="input-prefix">R$</span>
+                <input id="depreciation" class="field-input" type="number" min="0" step="0.01" placeholder="0,00"
+                  data-key="depreciation" aria-label="Depreciação da máquina em R$ por hora" />
+                <span class="input-suffix">/h</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="maintenance">Manutenção</label>
+              <div class="input-wrapper">
+                <span class="input-prefix">R$</span>
+                <input id="maintenance" class="field-input" type="number" min="0" step="0.01" placeholder="0,00"
+                  data-key="maintenance" aria-label="Manutenção em R$ por hora" />
+                <span class="input-suffix">/h</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="energy">Energia elétrica</label>
+              <div class="input-wrapper">
+                <span class="input-prefix">R$</span>
+                <input id="energy" class="field-input" type="number" min="0" step="0.01" placeholder="0,00"
+                  data-key="energy" aria-label="Energia elétrica em R$ por hora" />
+                <span class="input-suffix">/h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: Custos da Peça -->
+        <div class="card" id="card-material">
+          <div class="card-header">
+            <div class="card-icon material-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="card-title">Custos da Peça</h2>
+              <p class="card-subtitle">Material e margem de erro</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="field-group">
+              <label class="field-label" for="resin-qty">Quantidade de resina</label>
+              <div class="input-wrapper">
+                <input id="resin-qty" class="field-input" type="number" min="0" step="0.1" placeholder="0"
+                  data-key="resinQty" aria-label="Quantidade de resina em gramas" />
+                <span class="input-suffix">g</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="price-per-gram">Valor por grama</label>
+              <div class="input-wrapper">
+                <span class="input-prefix">R$</span>
+                <input id="price-per-gram" class="field-input" type="number" min="0" step="0.001" placeholder="0,000"
+                  data-key="pricePerGram" aria-label="Valor por grama em R$" />
+                <span class="input-suffix">/g</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="error-margin">Margem de erro</label>
+              <div class="input-wrapper">
+                <input id="error-margin" class="field-input" type="number" min="0" max="100" step="0.1" placeholder="0"
+                  data-key="errorMargin" aria-label="Margem de erro em porcentagem" />
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: Tempo e Trabalho -->
+        <div class="card" id="card-labor">
+          <div class="card-header">
+            <div class="card-icon labor-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="card-title">Tempo e Trabalho</h2>
+              <p class="card-subtitle">Horas e mão de obra</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="field-group">
+              <label class="field-label" for="print-hours">Horas de impressão</label>
+              <div class="input-wrapper">
+                <input id="print-hours" class="field-input" type="number" min="0" step="0.1" placeholder="0"
+                  data-key="printHours" aria-label="Horas de impressão" />
+                <span class="input-suffix">h</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="finishing-hours">Horas de acabamento + pintura</label>
+              <div class="input-wrapper">
+                <input id="finishing-hours" class="field-input" type="number" min="0" step="0.1" placeholder="0"
+                  data-key="finishingHours" aria-label="Horas de acabamento e pintura" />
+                <span class="input-suffix">h</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="hourly-rate">Valor da hora de trabalho</label>
+              <div class="input-wrapper">
+                <span class="input-prefix">R$</span>
+                <input id="hourly-rate" class="field-input" type="number" min="0" step="0.01" placeholder="0,00"
+                  data-key="hourlyRate" aria-label="Valor da hora de trabalho em R$" />
+                <span class="input-suffix">/h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4: Custos Extras -->
+        <div class="card" id="card-extras">
+          <div class="card-header">
+            <div class="card-icon extras-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="card-title">Custos Extras</h2>
+              <p class="card-subtitle">Valores fixos adicionais</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="field-group">
+              <label class="field-label" for="cleaning">Insumos de limpeza</label>
+              <div class="input-wrapper">
+                <span class="input-prefix">R$</span>
+                <input id="cleaning" class="field-input" type="number" min="0" step="0.01" placeholder="0,00"
+                  data-key="cleaning" aria-label="Insumos de limpeza em R$" />
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="packaging">Embalagem</label>
+              <div class="input-wrapper">
+                <span class="input-prefix">R$</span>
+                <input id="packaging" class="field-input" type="number" min="0" step="0.01" placeholder="0,00"
+                  data-key="packaging" aria-label="Embalagem em R$" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 5: Ajuste Final -->
+        <div class="card" id="card-margin">
+          <div class="card-header">
+            <div class="card-icon margin-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="card-title">Ajuste Final</h2>
+              <p class="card-subtitle">Margem de lucro desejada</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="field-group">
+              <label class="field-label" for="profit-margin">Margem de lucro</label>
+              <div class="input-wrapper">
+                <input id="profit-margin" class="field-input" type="number" min="0" max="1000" step="0.1"
+                  placeholder="0" data-key="profitMargin" aria-label="Margem de lucro em porcentagem" />
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="slider-group">
+              <input id="profit-slider" class="profit-slider" type="range" min="0" max="200" step="1" value="30"
+                aria-label="Controle deslizante da margem de lucro" />
+              <div class="slider-labels">
+                <span>0%</span>
+                <span>100%</span>
+                <span>200%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="action-row">
+          <button id="btn-calculate" class="btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+              <line x1="8" y1="6" x2="16" y2="6" />
+              <line x1="16" y1="12" x2="8" y2="12" />
+              <line x1="12" y1="18" x2="8" y2="18" />
+            </svg>
+            Calcular
+          </button>
+          <button id="btn-reset" class="btn-secondary" title="Limpar campos">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="1 4 1 10 7 10" />
+              <path d="M3.51 15a9 9 0 1 0 .49-4.5" />
+            </svg>
+            Limpar
+          </button>
+          <button id="btn-share" class="btn-secondary" title="Compartilhar via link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3" />
+              <circle cx="6" cy="12" r="3" />
+              <circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
+            Compartilhar
+          </button>
+        </div>
+
+      </div><!-- /inputs-column -->
+
+      <!-- ===== RESULTS COLUMN ===== -->
+      <div class="results-column">
+
+        <!-- RESULT CARD -->
+        <div class="card result-card" id="result-card">
+          <div class="result-hero">
+            <div class="result-label">Preço de Venda</div>
+            <div class="result-price" id="result-price">R$ 0,00</div>
+            <div class="result-cost-line">
+              <span>Custo total:</span>
+              <span id="result-cost">R$ 0,00</span>
+            </div>
+            <div class="result-profit-line">
+              <span>Lucro estimado:</span>
+              <span id="result-profit">R$ 0,00</span>
+            </div>
+          </div>
+
+          <button id="btn-details-toggle" class="details-toggle" aria-expanded="false">
+            <span>Ver detalhes</span>
+            <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+
+          <div id="details-panel" class="details-panel" hidden>
+            <div class="breakdown-list">
+              <div class="breakdown-item">
+                <div class="breakdown-label">
+                  <span class="breakdown-dot dot-resin"></span>
+                  Resina (com margem de erro)
+                </div>
+                <span class="breakdown-value" id="bd-resin">R$ 0,00</span>
+              </div>
+              <div class="breakdown-item">
+                <div class="breakdown-label">
+                  <span class="breakdown-dot dot-printing"></span>
+                  Custo de impressão
+                </div>
+                <span class="breakdown-value" id="bd-printing">R$ 0,00</span>
+              </div>
+              <div class="breakdown-item">
+                <div class="breakdown-label">
+                  <span class="breakdown-dot dot-labor"></span>
+                  Mão de obra
+                </div>
+                <span class="breakdown-value" id="bd-labor">R$ 0,00</span>
+              </div>
+              <div class="breakdown-item">
+                <div class="breakdown-label">
+                  <span class="breakdown-dot dot-extras"></span>
+                  Custos extras
+                </div>
+                <span class="breakdown-value" id="bd-extras">R$ 0,00</span>
+              </div>
+              <div class="breakdown-divider"></div>
+              <div class="breakdown-item breakdown-total">
+                <div class="breakdown-label">Custo Total</div>
+                <span class="breakdown-value" id="bd-total">R$ 0,00</span>
+              </div>
+              <div class="breakdown-item breakdown-margin">
+                <div class="breakdown-label">Margem de Lucro</div>
+                <span class="breakdown-value" id="bd-margin">0%</span>
+              </div>
+              <div class="breakdown-item breakdown-final">
+                <div class="breakdown-label">Preço Final</div>
+                <span class="breakdown-value" id="bd-final">R$ 0,00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-actions">
+            <button id="btn-pdf" class="btn-action" title="Exportar PDF">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+              </svg>
+              Exportar PDF
+            </button>
+            <button id="btn-save-history" class="btn-action" title="Salvar no histórico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                <polyline points="17 21 17 13 7 13 7 21" />
+                <polyline points="7 3 7 8 15 8" />
+              </svg>
+              Salvar
+            </button>
+          </div>
+        </div>
+
+        <!-- MINI CHART CARD -->
+        <div class="card chart-card" id="chart-card">
+          <div class="card-header">
+            <div class="card-icon chart-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+                <path d="M22 12A10 10 0 0 0 12 2v10z" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="card-title">Composição do Custo</h2>
+              <p class="card-subtitle">Distribuição percentual</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="cost-chart" width="200" height="200" aria-label="Gráfico de composição de custos"></canvas>
+              <div class="chart-legend" id="chart-legend">
+                <div class="legend-item"><span class="legend-dot dot-resin"></span><span>Resina</span><strong
+                    id="leg-resin">0%</strong></div>
+                <div class="legend-item"><span class="legend-dot dot-printing"></span><span>Impressão</span><strong
+                    id="leg-printing">0%</strong></div>
+                <div class="legend-item"><span class="legend-dot dot-labor"></span><span>Trabalho</span><strong
+                    id="leg-labor">0%</strong></div>
+                <div class="legend-item"><span class="legend-dot dot-extras"></span><span>Extras</span><strong
+                    id="leg-extras">0%</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK STATS CARD -->
+        <div class="card stats-card">
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-value" id="stat-per-gram">R$ 0,00</div>
+              <div class="stat-label">Por grama</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="stat-per-hour">R$ 0,00</div>
+              <div class="stat-label">Por hora</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="stat-markup">0%</div>
+              <div class="stat-label">Markup total</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="stat-profit-pct">0%</div>
+              <div class="stat-label">Margem real</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /results-column -->
+
+    </div>
+  </main>
+
+  <!-- ===== PRESET MODAL ===== -->
+  <div id="modal-preset" class="modal-overlay" hidden role="dialog" aria-modal="true"
+    aria-labelledby="modal-preset-title">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-preset-title" class="modal-title">Presets</h2>
+        <button class="modal-close" data-close="modal-preset" aria-label="Fechar modal de presets">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="preset-save-row">
+          <input id="preset-name-input" class="field-input" type="text" placeholder="Nome do preset..." maxlength="40"
+            aria-label="Nome do preset" />
+          <button id="btn-preset-save" class="btn-primary btn-sm">Salvar</button>
+        </div>
+        <div class="preset-list" id="preset-list">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HISTORY MODAL ===== -->
+  <div id="modal-history" class="modal-overlay" hidden role="dialog" aria-modal="true"
+    aria-labelledby="modal-history-title">
+    <div class="modal modal-wide">
+      <div class="modal-header">
+        <h2 id="modal-history-title" class="modal-title">Histórico de Cálculos</h2>
+        <button class="modal-close" data-close="modal-history" aria-label="Fechar modal de histórico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="history-list" id="history-list">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
